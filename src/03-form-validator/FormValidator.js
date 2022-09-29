@@ -27,24 +27,12 @@ export default function FormValidator () {
     return [...email].filter(char => char === '@').length === 1;
   };
 
-  const validateAndSetError = (func, field, value) => {
+  const validateAndSetError = (func, field) => {
     if (!func()) {
       errors.push(errorMessages[field]);
       return false;
     }
     return true;
-  }
-
-  const validateForm = () => {
-    setErrors([]); setErrorMessage('');
-    if (!email?.trim() || !password?.trim() || !passwordConfirm.trim()) { // !value?.trim() check not null or undefined, and no whitespace
-      errors.push(errorMessages["MISSING_FIELD"]);
-      return false;
-    }
-    validateAndSetError(validateEmail, "EMAIL", email);
-    validateAndSetError(validatePassword, "PASSWORD", password);
-    validateAndSetError(validatePasswordConfirm, "PASSWORD_CONFIRM", passwordConfirm);
-    return errors.length < 1;
   }
 
   const onSubmit = (e) => {
@@ -55,6 +43,18 @@ export default function FormValidator () {
       setErrorMessage(errors.join(", "));
       setSubmitSuccessful(false);
     }
+  }
+
+  const validateForm = () => {
+    setErrors([]); setErrorMessage('');
+    if (!email?.trim() || !password?.trim() || !passwordConfirm.trim()) { // check not null or undefined, and no whitespace
+      errors.push(errorMessages["MISSING_FIELD"]);
+      return false;
+    }
+    validateAndSetError(validateEmail, "EMAIL", email);
+    validateAndSetError(validatePassword, "PASSWORD", password);
+    validateAndSetError(validatePasswordConfirm, "PASSWORD_CONFIRM", passwordConfirm);
+    return errors.length < 1;
   }
 
   return (
